@@ -1,0 +1,17 @@
+{
+  "name": "node_blog",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev nodemon ./bin/www.js",
+    "build": "cross-env NODE_ENV=production nodemon ./bin/www.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.15",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2"
+  }
+}
