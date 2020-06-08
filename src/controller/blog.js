@@ -1,18 +1,23 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 11:46:10
- * @LastEditTime: 2020-05-28 17:09:33
+ * @LastEditTime: 2020-06-08 16:45:37
  * @Description: this is ....
  */
-// 获取博客列表
+// 引入数据库
+const { exec } = require('../db/mysql')
+
+// 根据作者和关键字 获取博客列表
 const getList = (author, keyword) => {
-  return [{
-      id: 1
-    },
-    {
-      id: 2
-    }
-  ]
+  let sql = `select  blogs.id, title, content, createtime, state, realname from blogs  left join users on blogs.user_id = users.id where 1=1 `
+  if (author) {
+    sql += `and realname='${author}'`
+  }
+  if (keyword) {
+    sql += `and title like '%${keyword}%' `
+  }
+   sql += `order by createtime desc;`
+  return exec(sql);
 }
 // 获取博客详情
 const getDetail = (id) => {

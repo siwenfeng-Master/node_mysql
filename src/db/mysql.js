@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-06-02 14:29:17
- * @LastEditTime: 2020-06-02 15:33:50
+ * @LastEditTime: 2020-06-08 16:47:35
  * @Description: this is ....
  */ 
 const mysql = require('mysql')
@@ -16,7 +16,6 @@ con.connect((err, result) => {
   }
   console.log('mysql connect successful!')
 });
-exec('select * from users;')
 
 // 统一执行sql函数
 function exec(sql) {
@@ -27,7 +26,7 @@ function exec(sql) {
         reject(err)
         return;
       }
-      console.log(result)
+      // console.log(result)
       resolve(result);
     })
   })

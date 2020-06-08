@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-26 14:39:56
- * @LastEditTime: 2020-05-28 16:12:37
+ * @LastEditTime: 2020-06-08 17:12:00
  * @Description: 业务代码
  */ 
 const handleBlogRouter = require('./src/router/blog');
@@ -49,10 +49,14 @@ const serverHandle = (req, res) => {
     // 博客所有路由处理
     req.body = data;
 
-    const blogData = handleBlogRouter(req, res);
-    if (blogData) {
-      res.end(JSON.stringify(blogData))
-      return;
+    const blogResult = handleBlogRouter(req, res);
+    if (blogResult) {
+      blogResult.then(blogData => {
+        if (blogData) {
+          res.end(JSON.stringify(blogData))
+        }
+      })
+      return
     }
 
     // 用户所有路由处理
