@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-06-02 14:29:17
- * @LastEditTime: 2020-06-08 16:47:35
+ * @LastEditTime: 2020-06-08 18:38:45
  * @Description: this is ....
  */ 
 const mysql = require('mysql')
@@ -26,7 +26,6 @@ function exec(sql) {
         reject(err)
         return;
       }
-      // console.log(result)
       resolve(result);
     })
   })

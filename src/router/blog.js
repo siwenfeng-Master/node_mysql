@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 09:26:11
- * @LastEditTime: 2020-06-08 16:56:05
+ * @LastEditTime: 2020-06-08 19:13:58
  * @Description: this is ....
  */ 
 const { getList, getDetail, newBlog, updateBlog, delBlog } = require('../controller/blog');
@@ -25,26 +25,42 @@ const handleBlogRouter = (req, res) => {
   // 获取博客详情
   if (method === 'GET' && path === '/api/blog/detail') {
     const id = query.id || '';
-    const detailData = getDetail(id);
-
-    return new SuccessModel(detailData, 'success')
+    const result = getDetail(id);
+    return result.then(detailData => {
+      return new SuccessModel(detailData, 'success')
+    })
   }
   // 新建一篇博客
   if (method === 'POST' && path === '/api/blog/new') {
-    const reqData = newBlog(req.body);
-    return new SuccessModel(reqData, 'success')
+    const result = newBlog(req.body);
+    return result.then(reqData => {
+      return new SuccessModel(reqData, 'success')
+    })
   }
   
   // 更新博客
-  if (method === 'PUT' && path === '/api/blog/update') {
+  if (method === 'POST' && path === '/api/blog/update') {
     const id = query.id || '';
     const result = updateBlog(id, req.body)
-    return result ? new SuccessModel(result, 'success') : new ErrorModel(result, 'error')
+    return result.then(val => {
+      if (val) {
+          return new SuccessModel()
+      } else {
+          return new ErrorModel('更新博客失败！')
+      }
+    })
   }
   // 删除博客
   if (method === 'DELETE' && path === '/api/blog/del') {
     const id = query.id || '';
-    return new SuccessModel(delBlog(Number(id)), 'success')
+    const result = delBlog(Number(id));
+    return result.then(data => {
+      if (data) {
+        return new SuccessModel()
+      } else {
+        return new ErrorModel('删除博客失败！')
+      }
+    })
   }
 }
 

@@ -1,11 +1,11 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 10:26:20
- * @LastEditTime: 2020-05-28 16:45:44
+ * @LastEditTime: 2020-06-08 19:15:43
  * @Description: this is ....
  */ 
 class BaseModel {
-  constructor(data, message) {
+  constructor(data, message="success") {
     if (typeof data === 'string') {
       this.msg = data;
       data = null;

@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 11:46:10
- * @LastEditTime: 2020-06-08 16:45:37
+ * @LastEditTime: 2020-06-08 19:12:37
  * @Description: this is ....
  */
 // 引入数据库
@@ -21,26 +21,49 @@ const getList = (author, keyword) => {
 }
 // 获取博客详情
 const getDetail = (id) => {
-  return {
-    author: 'siwenfeng',
-    updateTime: new Date().getTime()
-  }
+  const sql =  `select id, title, content, createtime, state from blogs where 1=1 and id=${id};`
+  return exec(sql)
 }
 
 // 新建博客信息
 const newBlog = (blogData = {}) => {
-  // blogData 插入数据库
-  return true;
+  const { title, content } = blogData;
+  const createTime = Date.now();
+  const user_id = 5;
+  const sql = `insert into blogs(title, content, createtime, user_id, state) values('${title}', '${content}', '${createTime}', '${user_id}', 1);`
+  return exec(sql).then(insertData => {
+    return {
+      id: user_id
+    }
+  })
 }
 // 根据id更新博客信息
 const updateBlog = (id, blogData = {}) => {
+  const { title, content } = blogData;
   // 根据id 插库
-  return false
+  const sql = `
+        update blogs set title='${title}', content='${content}' where id=${id}
+    `
+    return exec(sql).then(updateData => {
+      // console.log('updateData is ', updateData)
+      if (updateData.affectedRows > 0) {
+          return true
+      }
+      return false
+  })
 }
 // 根据id删除博客信息
 const delBlog = (id) => {
   // 数据库删除
-  return true
+  const sql = `
+        delete from blogs where id=${id}`
+    return exec(sql).then(deleteData => {
+      // console.log('updateData is ', updateData)
+      if (deleteData.affectedRows > 0) {
+          return true
+      }
+      return false
+  })
 }
 
 
