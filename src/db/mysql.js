@@ -1,11 +1,11 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-06-02 14:29:17
- * @LastEditTime: 2020-06-08 18:38:45
+ * @LastEditTime: 2020-06-11 15:21:51
  * @Description: this is ....
  */ 
 const mysql = require('mysql')
-const { MYSQL_CONF, REDIS_CONF } = require('../conf/db');
+const { MYSQL_CONF } = require('../conf/db');
 
 // 创建链接对象
 const con = mysql.createConnection(MYSQL_CONF);

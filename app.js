@@ -1,12 +1,13 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-26 14:39:56
- * @LastEditTime: 2020-06-11 14:10:52
+ * @LastEditTime: 2020-06-11 15:24:42
  * @Description: 业务代码
  */
 const handleBlogRouter = require('./src/router/blog');
 const handleUserRouter = require('./src/router/user');
-const { get, set } = require('./src/db/redis')
+const { get, set } = require('./src/db/redis');
+const { access } = require('./src/utils/log');
 const queryString = require('querystring');
 
 // 获取 cookie 的过期时间
@@ -49,6 +50,7 @@ const postDataHandle = (req) => {
 }
 
 const serverHandle = (req, res) => {
+  access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
   // 设置返回数据格式
   res.setHeader('Content-type', 'application/json')
 
