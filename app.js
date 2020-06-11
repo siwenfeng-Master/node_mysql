@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-26 14:39:56
- * @LastEditTime: 2020-06-10 17:42:25
+ * @LastEditTime: 2020-06-11 11:08:42
  * @Description: 业务代码
  */
 const handleBlogRouter = require('./src/router/blog');
@@ -12,12 +12,12 @@ const queryString = require('querystring');
 const getCookieExpires = () => {
   const d = new Date()
   d.setTime(d.getTime() + (24 * 60 * 60 * 1000))
-  console.log('d.toGMTString() is ', d.toGMTString())
   return d.toGMTString()
 }
 
-// // session 数据
-// const SESSION_DATA = {}
+
+// session 数据
+const SESSION_DATA = {}
 
 const postDataHandle = (req) => {
 
@@ -46,6 +46,7 @@ const postDataHandle = (req) => {
 
   })
 }
+
 const serverHandle = (req, res) => {
   // 设置返回数据格式
   res.setHeader('Content-type', 'application/json')
@@ -64,28 +65,29 @@ const serverHandle = (req, res) => {
     if (!item) {
       return
     }
-    const arr = item.split('=')
-    const key = arr[0].trim()
-    const val = arr[1].trim()
+    const arr = item.split('=');
+    // 去除空格
+    const key = arr[0].trim();
+    const val = arr[1].trim();
     req.cookie[key] = val
   })
-  res.setHeader('Set-Cookie', `path=/; httpOnly; expires=${getCookieExpires()}`)
-  console.log(cookieStr)
-  // 解析 session
-  // let needSetCookie = false
-  // let userId = req.cookie.userid
-  // if (userId) {
-  //   if (!SESSION_DATA[userId]) {
-  //     SESSION_DATA[userId] = {}
-  //   }
-  // } else {
-  //   needSetCookie = true
-  //   userId = `${Date.now()}_${Math.random()}`
-  //   SESSION_DATA[userId] = {}
-  // }
-  
-  // req.session = SESSION_DATA[userId]
 
+  // 解析 session
+  let needSetCookie = false;
+  let userId = req.cookie.userid;
+  if (userId) {
+    if (!SESSION_DATA[userId]) {
+      SESSION_DATA[userId] = {};
+    }
+  } else {
+    needSetCookie = true;
+    userId = `${Date.now()}_${Math.random()}`;
+    SESSION_DATA[userId] = {};
+  }
+  console.log(SESSION_DATA)
+  req.session = SESSION_DATA[userId];
+
+  // promise
   postDataHandle(req).then(data => {
     // 博客所有路由处理
     req.body = data;
@@ -93,9 +95,10 @@ const serverHandle = (req, res) => {
     const blogResult = handleBlogRouter(req, res);
     if (blogResult) {
       blogResult.then(blogData => {
-        if (blogData) {
-          res.end(JSON.stringify(blogData))
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`)
         }
+        res.end(JSON.stringify(blogData))
       })
       return
     }
@@ -104,9 +107,10 @@ const serverHandle = (req, res) => {
     const userData = handleUserRouter(req, res);
     if (userData) {
       userData.then(data => {
-        if (data) {
-          res.end(JSON.stringify(data))
+        if (needSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; httpOnly; expires=${getCookieExpires()}`)
         }
+        res.end(JSON.stringify(data))
       })
       return;
     }
