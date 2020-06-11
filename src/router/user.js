@@ -1,11 +1,12 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 09:26:19
- * @LastEditTime: 2020-06-11 11:12:51
+ * @LastEditTime: 2020-06-11 14:26:07
  * @Description: this is ....
  */ 
 const { SuccessModel, ErrorModel } = require('../model/resModel');
 const { login } = require('../controller/user');
+const { set } = require('../db/redis')
 
 // 获取 cookie 的过期时间
 // const getCookieExpires = () => {
@@ -18,14 +19,18 @@ const handleUserRouter = (req, res) => {
   const method = req.method;
   const path = req.path;
 
-  if (method === 'GET' && path === '/api/user/login') {
-    const { username, password } = req.query;
+  if (method === 'POST' && path === '/api/user/login') {
+    const { username, password } = req.body;
     const result = login(username, password);
     return result.then(data => {
       if (data.username) {
         // 设置session
         req.session.username = data.username;
         req.session.realname = data.realname;
+
+        // 同步redis
+        set(req.sessionId, req.session);
+
         return new SuccessModel();
       }
       return new ErrorModel('登陆失败');

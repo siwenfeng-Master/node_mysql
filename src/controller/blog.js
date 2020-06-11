@@ -1,7 +1,7 @@
 /*
  * @Author: siwenfeng
  * @Date: 2020-05-28 11:46:10
- * @LastEditTime: 2020-06-10 11:40:50
+ * @LastEditTime: 2020-06-11 14:19:52
  * @Description: this is ....
  */
 // 引入数据库
@@ -54,10 +54,10 @@ const updateBlog = (id, blogData = {}) => {
   })
 }
 // 根据id删除博客信息
-const delBlog = (id) => {
+const delBlog = (id, author) => {
   // 数据库删除
   const sql = `
-        delete from blogs where id=${id}`
+        delete from blogs where id=${id} and author='${author}'`
     return exec(sql).then(deleteData => {
       // console.log('updateData is ', updateData)
       if (deleteData.affectedRows > 0) {
